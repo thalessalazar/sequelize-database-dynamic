@@ -1,27 +1,24 @@
 import Sequelize from "sequelize";
-import config from "../config/database";
-
-import User from "../model/User";
-
-const models = [User];
+// import config from "../config/database";
 
 class Database {
-    constructor() {
+    constructor(config, models) {
         this.connection = new Sequelize(config);
+        this.models = models;
         this.init();
         this.associate();
     }
 
     init() {
-        models.forEach((model) => model.init(this.connection));
+        this.models.forEach((model) => model.init(this.connection));
     }
 
     associate() {
         // eslint-disable-next-line arrow-body-style
-        models.forEach((model) => {
+        this.models.forEach((model) => {
             if (model.associate) model.associate(this.connection.models);
         });
     }
 }
 
-export default new Database();
+export default Database;
